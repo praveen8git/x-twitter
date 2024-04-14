@@ -107,7 +107,9 @@ const SingleTweet = () => {
 
 
                 {/* Tweets section */}
-                <Tweet onDelete={handleTweetDelete} {...tweetData} />
+                {
+                    tweetData && <Tweet onDelete={handleTweetDelete} {...tweetData} />
+                }
 
                 {/* Comment section */}
                 <div className="flex py-5 px-3 border-[1px] border-x-black border-t-black border-b-stone-800">

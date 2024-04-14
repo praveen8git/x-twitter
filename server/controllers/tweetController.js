@@ -56,20 +56,30 @@ const likeTweet = async (req, res) => {
         const { _id } = req.user;
         let tweet = await Tweet.findById(tweetId);
 
-        if (tweet.likes.includes(username)) {
-            // filter the username so that post get unliked
+        // Check if the user has already liked the tweet
+        const userIndex = tweet.likes.findIndex(id => id.toString() === _id.toString());
+        let isLiked = userIndex !== -1;
+
+        if (isLiked) {
+            // Remove the user's like
             tweet.likes = tweet.likes.filter(id => id.toString() !== _id.toString());
         } else {
-            // add the username to like the post
+            // Add the user's like
             tweet.likes.push(_id);
         }
-        await tweet.save();
-        res.status(200).json(tweet);
 
+        await tweet.save();
+
+        // Update the user's likes array
+        await User.findByIdAndUpdate(req.user._id, {
+            $addToSet: { likes: tweetId },
+        }, { new: true });
+
+        res.status(200).json(tweet);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
-}
+};
 
 const postRetweet = async (req, res) => {
     try {

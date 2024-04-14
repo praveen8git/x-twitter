@@ -1,7 +1,7 @@
 import { BadgeCheck, MessageSquare, Repeat2, Heart, BarChart2, Trash2 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import useTimeFormatter from "../hooks/useTimeFormatter";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import IsAuthenticatedContext from "../contexts/IsAuthenticatedContext";
 import toast from 'react-hot-toast';
 import axios from "axios";
@@ -12,6 +12,37 @@ const Tweet = (props) => {
     const navigate = useNavigate();
 
     const { login, user } = useContext(IsAuthenticatedContext);
+
+    // Handle Like
+    const [likesCount, setLikesCount] = useState(props.likes.length);
+    const [isLiked, setIsLiked] = useState(props.likes.includes(user._id));
+    const handleLike = async () => {
+        // Update the UI immediately
+        setIsLiked(!isLiked);
+        setLikesCount(prevCount => isLiked ? prevCount - 1 : prevCount + 1);
+
+        // Send the like request to the server
+        const tweetId = props._id;
+        const url = `${VITE_SERVER}/api/like/${tweetId}`;
+
+        const likeRequest = axios.patch(url, {}, {
+            withCredentials: true,
+        });
+
+        toast.promise(likeRequest, {
+            loading: 'Liking tweet...',
+            success: () => {
+                
+                return !isLiked ? 'Liked!' : 'Unliked!'
+            },
+            error: (err) => {
+                // revert the UI update if the server update fails
+                setIsLiked(!isLiked);
+                setLikesCount(prevCount => isLiked ? prevCount + 1 : prevCount - 1);
+                return `Failed to like tweet: ${err.response ? err.response.data.message : err.message}`
+            },
+        });
+    };
 
     // Tweet delete handler ------>
     const handleDelete = async () => {
@@ -153,8 +184,8 @@ const Tweet = (props) => {
                         <Repeat2 className=" hover:bg-green-600/5 hover:rounded-full p-2" size={36} /> {props.retweets.length}
                     </div>
 
-                    <div className=" flex items-center justify-center  hover:text-rose-600 hover:cursor-pointer">
-                        <Heart className=" hover:bg-rose-600/5 hover:rounded-full p-2" size={36} /> {props.likes.length}
+                    <div className="flex items-center justify-center hover:text-rose-600 hover:cursor-pointer" onClick={handleLike}>
+                        {isLiked ? <Heart fill="#e00d49" className="hover:bg-rose-600/5 hover:rounded-full p-2 text-rose-600" size={36} /> : <Heart className="hover:bg-rose-600/5 hover:rounded-full p-2" size={36} />} {likesCount}
                     </div>
 
                     <div className="hidden lg:flex items-center justify-center  hover:text-yellow-600 hover:cursor-pointer">
