@@ -83,21 +83,36 @@ const likeTweet = async (req, res) => {
 
 const postRetweet = async (req, res) => {
     try {
-        const { tweetId } = req.body;
+        const { tweetId, image, text } = req.body;
+        // console.log(tweetId);
         const userId = req.user._id;
-        let tweet = await Tweet.findById(tweetId);
+        // Find the original tweet
+        const originalTweet = await Tweet.findById(tweetId);
 
         // Create a new tweet as a retweet
         const retweet = new Tweet({
             tweetBy: userId,
-            text: tweet.text,
-            image: tweet.image,
+            text,
+            image,
             retweetedThis: [tweetId],
         });
 
         await retweet.save();
+
+        // Update the original tweet's retweets count and array
+        // console.log(originalTweet);
+        originalTweet.retweets.push(retweet._id);
+        // originalTweet.retweetsCount += 1;
+        await originalTweet.save();
+
+        // Update the user's retweets array
+        const user = await User.findById(userId);
+        user.retweets.push(retweet._id);
+        await user.save();
+
         res.status(201).json(retweet);
     } catch (error) {
+        console.error(error);
         res.status(500).json({ message: error.message });
     }
 }
@@ -114,7 +129,13 @@ const getTweetById = async (req, res) => {
                 path: 'user',
                 select: '-password'
             }
-        }).populate(['retweetedThis']);
+        }).populate({
+            path: 'retweetedThis',
+            populate: {
+                path: 'tweetBy',
+                select: '-password'
+            }
+        });
         res.status(200).json(tweet);
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -126,7 +147,13 @@ const getAllTweets = async (req, res) => {
         const tweets = await Tweet.find().populate({
             path: 'tweetBy',
             select: '-password'
-        }).populate('retweetedThis').sort({ createdAt: -1 });
+        }).populate({
+            path: 'retweetedThis',
+            populate: {
+                path: 'tweetBy',
+                select: '-password'
+            }
+        }).sort({ createdAt: -1 });
         res.status(200).json(tweets);
     } catch (error) {
         res.status(500).json({ message: error.message });

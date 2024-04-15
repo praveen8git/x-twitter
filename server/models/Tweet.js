@@ -24,8 +24,9 @@ const TweetSchema = new mongoose.Schema({
     retweets: {
         type: [{
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'User',
-        }]
+            ref: 'Tweet',
+        }],
+        default: []
     },
     retweetedThis: {
         type: [{

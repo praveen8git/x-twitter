@@ -49,7 +49,7 @@ const SingleTweet = () => {
     
     useEffect(() => {
         getTweetData();
-    }, [])
+    }, [tweetId])
 
     // Comment Posting ------>
     const [commentText, setCommentText] = useState("");

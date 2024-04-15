@@ -4,6 +4,7 @@ import toast, { Toaster } from 'react-hot-toast';
 import { useContext, useEffect, useState } from "react";
 import { Home, Login, Profile, Register, Search, SingleTweet } from "./pages";
 import IsAuthenticatedContext from "./contexts/IsAuthenticatedContext";
+import ModalContextProvider from "./contexts/ModalContextProvider";
 
 const { VITE_SERVER } = import.meta.env;
 
@@ -32,7 +33,7 @@ function App() {
     isLoggedin();
   }, [])
   return (
-    <>
+    <ModalContextProvider>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/explore" element={<Search />} />
@@ -48,7 +49,7 @@ function App() {
           duration: 3000
         }}
       />
-    </>
+    </ModalContextProvider>
   )
 }
 

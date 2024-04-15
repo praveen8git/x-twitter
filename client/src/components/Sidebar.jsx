@@ -4,6 +4,8 @@ import toast from 'react-hot-toast';
 import axios from "axios";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import IsAuthenticatedContext from "../contexts/IsAuthenticatedContext";
+import RetweetModal from "./RetweetModal";
+import ModalContext from "../contexts/ModalContext";
 
 const { VITE_SERVER } = import.meta.env;
 
@@ -11,7 +13,7 @@ const Sidebar = () => {
 
   const navigate = useNavigate();
   const { user, logout } = useContext(IsAuthenticatedContext);
-
+  const { onOpenModal } = useContext(ModalContext);
 
   const handleLogout = async (e) => {
     e.preventDefault();
@@ -25,14 +27,15 @@ const Sidebar = () => {
 
       success: (res) => {
         console.log(res.data);
-       
+
         if (res.data.success) {
           logout();
           navigate("/login");
           return "Logged out!"
-        }},
+        }
+      },
 
-        error: (err) => `Error: ${err.response ? err.response.data.message.toString() : err.toString()}`,
+      error: (err) => `Error: ${err.response ? err.response.data.message.toString() : err.toString()}`,
     });
   };
 
@@ -53,7 +56,7 @@ const Sidebar = () => {
       <div className="flex flex-col justify-between h-full">
         <ul className="flex flex-col text-lg space-y-0 px-2 lg:px-11 font-bold w-full justify-center">
           <NavLink to="/"
-            className={`flex lg:justify-start items-center gap-3 justify-center  mr- lg:w-fit  hover:bg-stone-900 hover:cursor-pointer p-4 lg:py-3 hover:rounded-full transition-all duration-200`  }>
+            className={`flex lg:justify-start items-center gap-3 justify-center  mr- lg:w-fit  hover:bg-stone-900 hover:cursor-pointer p-4 lg:py-3 hover:rounded-full transition-all duration-200`}>
             <Home absoluteStrokeWidth /> <span
               className="hidden lg:block">Home</span>
           </NavLink>
@@ -73,9 +76,10 @@ const Sidebar = () => {
               className="hidden lg:block">Logout</span>
           </Link>
           <li>
-            <div className="button w-full text-center my-4">
-              <button
-                className="hidden lg:block bg-primary px-20 text-xl rounded-full py-3 text-white">Post</button>
+            <div onClick={() => { onOpenModal(); }} className="button w-full text-center my-4">
+              <button className="hidden lg:block bg-primary px-20 text-xl rounded-full py-3 text-white">
+                Post
+              </button>
               <button className="lg:hidden bg-primary  px-2 lg:px-4 text-xl rounded-full py-2 lg:py-3 text-white hover:p-4 transition-all">
                 <Feather size={20} absoluteStrokeWidth />
               </button>
@@ -86,18 +90,20 @@ const Sidebar = () => {
           <Link to={"/profile/" + user?.username}
             className="flex lg:justify-start items-center gap-3 justify-center ml-2 lg:ml-0 w-fit  hover:cursor-pointer rounded-full transition-all duration-200">
             <img src={
-                        user?.profilePicture === "" ?
-                            "https://res.cloudinary.com/diwafhioq/image/upload/e_brightness:-10/wvxd8kovevbdgpsb1p3a.jpg"
-                            : user.profilePicture
-                    } className='h-12 w-12 rounded-full object-cover' />
+              user?.profilePicture === "" ?
+                "https://res.cloudinary.com/diwafhioq/image/upload/e_brightness:-10/wvxd8kovevbdgpsb1p3a.jpg"
+                : user.profilePicture
+            } className='h-12 w-12 rounded-full object-cover' />
             <div className='text-base'>
               <span className="hidden lg:flex">{user?.fullName} <BadgeCheck className={`inline ml-1 self-center text-black ${user?.subscription === "Premium" ? 'bg-primary' : 'bg-yellow-500'
-                        } rounded-full`} size={16} /> </span> 
+                } rounded-full`} size={16} /> </span>
               <p className="hidden lg:block text-stone-500">@{user?.username}</p>
             </div>
           </Link>
         </ul>
       </div>
+      {/* retweet modal */}
+      <RetweetModal />
     </section>
   )
 }
