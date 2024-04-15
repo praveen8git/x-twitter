@@ -2,7 +2,7 @@ import axios from "axios";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import toast, { Toaster } from 'react-hot-toast';
 import { useContext, useEffect, useState } from "react";
-import { Home, Login, Profile, Register, Search, SingleTweet } from "./pages";
+import { EditProfile, Home, Login, Profile, Register, Search, SingleTweet } from "./pages";
 import IsAuthenticatedContext from "./contexts/IsAuthenticatedContext";
 import ModalContextProvider from "./contexts/ModalContextProvider";
 
@@ -18,7 +18,7 @@ function App() {
       const response = await axios.get(`${VITE_SERVER}/auth/is-logged-in`, {
         withCredentials: true,
       })
-      // console.log(response);
+      console.log(response);
       if (response.data.success) {
         
         login(response.data.user);
@@ -38,6 +38,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/explore" element={<Search />} />
         <Route path="/profile/:username" element={<Profile />} />
+        <Route path="/profile/:username/edit" element={<EditProfile />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/tweet/:tweetId" element={<SingleTweet/>} />

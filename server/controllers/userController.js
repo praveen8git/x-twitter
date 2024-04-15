@@ -1,4 +1,7 @@
 import User from "../models/User.js";
+import jwt from "jsonwebtoken";
+
+const { JWT_SECRET } = process.env;
 
 // Fetches user's profile by username, excluding the password, and 
 // includes whether the requestee user follows them or not. (incase of other people's profile)
@@ -69,6 +72,7 @@ const getFollowingListByUsername = async (req, res) => {
 // Updates the user's profile information, excluding the password.
 const updateUserById = async (req, res) => {
     try {
+        // console.log(req.body);
         const updates = Object.keys(req.body);
         const allowedUpdates = ['profilePicture', 'bio', 'coverPicture', 'fullName'];
         const isValidOperation = updates.every((update) => allowedUpdates.includes(update));
@@ -81,7 +85,28 @@ const updateUserById = async (req, res) => {
 
         if (!user) return res.status(404).json({ message: 'User not found' });
 
-        res.status(201).json(user);
+        // refreshing token to make the token data consistent with updated user data
+        const token = jwt.sign({ 
+            _id: user._id,
+            fullName: user.fullName, 
+            username: user.username,
+            subscription: user.subscription,
+            profilePicture: user.profilePicture
+         }, JWT_SECRET);
+
+        user.token = token;
+        user.password = undefined;
+
+        const options = {
+            // expires: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000), // 1 day
+            // expires: new Date(Date.now() + 1 * 60 * 1000), // 1 min
+            maxAge: 24 * 60 * 60 * 1000, // 1 day
+            httpOnly: true,
+            secure: true, // Set to true if your site is served over HTTPS
+            sameSite: 'none' // Consider setting this if your frontend and backend are on different domains
+        }
+
+        res.status(201).cookie("token", token, options).json(user);
     } catch (err) {
         res.status(400).json({ message: err.message });
     }

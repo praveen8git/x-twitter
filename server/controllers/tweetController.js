@@ -57,6 +57,7 @@ const deleteTweetById = async (req, res) => {
     }
 };
 
+// toggle like/unlike
 const likeTweet = async (req, res) => {
     try {
         const { tweetId } = req.params;
@@ -70,17 +71,20 @@ const likeTweet = async (req, res) => {
         if (isLiked) {
             // Remove the user's like
             tweet.likes = tweet.likes.filter(id => id.toString() !== _id.toString());
+            // Also remove the tweet ID from the user's likes array
+            await User.findByIdAndUpdate(_id, {
+                $pull: { likes: tweetId }
+            });
         } else {
             // Add the user's like
             tweet.likes.push(_id);
+            // Also add the tweet ID to the user's likes array
+            await User.findByIdAndUpdate(_id, {
+                $addToSet: { likes: tweetId }
+            });
         }
 
         await tweet.save();
-
-        // Update the user's likes array
-        await User.findByIdAndUpdate(req.user._id, {
-            $addToSet: { likes: tweetId },
-        }, { new: true });
 
         res.status(200).json(tweet);
     } catch (error) {

@@ -83,13 +83,13 @@ const Profile = () => {
                 </div>
 
                 {/* Profile Details */}
-                <div className="flex flex-col gap-2 m-4">
+                <div className="flex flex-col gap-2 m-4 mt-6">
                     <div className="text-right text-sm font-semibold">
                         {
                             userProfile.username === user.username ? (
-                                <button className="border border-stone-700 px-4 pb-1 pt-1 md:py-2 rounded-full hover:border-stone-500 transition-all">
+                                <Link to='edit' className="border border-stone-700 px-4 pb-1 pt-1 md:py-2 rounded-full hover:border-stone-500 transition-all">
                                     Edit Profile
-                                </button>
+                                </Link>
                             ) : (
                                 <button className="border border-stone-700 px-4 pb-1 pt-1 md:py-2 rounded-full hover:border-stone-500 transition-all">
                                     {userProfile.isFollowing ? "Following" : "Follow"}
