@@ -47,7 +47,7 @@ const RetweetModal = (props) => {
         });
 
         toast.promise(fetch, {
-            loading: 'Retweeting...',
+            loading: () => tweetId ? 'Retweeting...' : 'Tweeting',
 
             success: (res) => {
                 if (res.status === 201) {
@@ -58,7 +58,7 @@ const RetweetModal = (props) => {
                     onCloseModal();
                     // Append the new tweet to the beginning of the tweets array
                     //setTweets([res.data, ...tweets]); // not returning populated data
-                    return "Retweeted!"
+                    return tweetId ? 'Retweeted...' : 'Tweeted'
                 }
             },
 

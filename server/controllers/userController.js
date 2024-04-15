@@ -2,10 +2,31 @@ import User from "../models/User.js";
 
 // Fetches user's profile by username, excluding the password, and 
 // includes whether the requestee user follows them or not. (incase of other people's profile)
-const getUserProfile = async (req, res) => {
+const getUserProfile = async (req, res) => {    
     try {
         const username = req.params.username;
-        const user = await User.findOne({ username: username }).select('-password');
+        const user = await User.findOne({ username: username }).select('-password').populate({
+            path: 'tweets',
+            populate: 'tweetBy'
+        }).populate({
+            path: 'retweets',
+            populate: [
+                {
+                    path: 'retweetedThis',
+                    populate: 'tweetBy'
+                }, 'tweetBy']
+        }).populate({
+            path: 'likes',
+            populate: [
+                {
+                    path: 'retweetedThis',
+                    populate: 'tweetBy'
+                }, 'tweetBy']
+        });
+        // .populate({
+        //     path: 'tweet',
+        //     populate: 'reweetedThis'
+        // });
         if (!user) return res.status(404).json({ message: 'User not found' });
 
         // Check if the request is for the user's own profile
@@ -60,7 +81,7 @@ const updateUserById = async (req, res) => {
 
         if (!user) return res.status(404).json({ message: 'User not found' });
 
-        res.json(user);
+        res.status(201).json(user);
     } catch (err) {
         res.status(400).json({ message: err.message });
     }

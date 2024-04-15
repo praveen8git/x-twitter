@@ -41,7 +41,7 @@ const Search = () => {
 
                 {/* Search results */}
 
-                <div className="flex gap-8 justify-between px-4 py-4 border-[1px] border-x-black border-t-black border-b-stone-800">
+                <div className="flex gap-8 justify-between px-4 md:px-12 py-4 border-[1px] border-x-black border-t-black border-b-stone-800">
                     <div className="flex gap-6">
                         <img className="h-14 w-14 rounded-full object-cover" src="https://res.cloudinary.com/dd8msdb9a/image/upload/v1712702220/Userimages/k3inrajwwhjzwvmcq1hd.jpg" alt="" />
                         <div className="flex flex-col self-center">
@@ -50,7 +50,7 @@ const Search = () => {
                         </div>
                     </div>
                     <div className="self-center">
-                        <button className="border border-stone-700 px-6 py-1.5 pt-2 rounded-full text-sm bg-stone-200 text-black">
+                        <button className="font-semibold border border-stone-700 px-6 py-1.5 pt-2 rounded-full text-sm bg-stone-200 text-black">
                             Follow
                         </button>
                     </div>

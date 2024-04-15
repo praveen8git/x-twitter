@@ -11,6 +11,13 @@ const postTweet = async (req, res) => {
             image,
         });
         await tweet.save();
+        
+        // Update the user's tweets array
+        const userId = req.user._id;
+        const user = await User.findById(userId);
+        user.tweets.push(tweet._id);
+        await user.save();
+
         res.status(201).json(tweet);
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -108,6 +115,7 @@ const postRetweet = async (req, res) => {
         // Update the user's retweets array
         const user = await User.findById(userId);
         user.retweets.push(retweet._id);
+        // user.tweets.push(retweet._id);
         await user.save();
 
         res.status(201).json(retweet);
