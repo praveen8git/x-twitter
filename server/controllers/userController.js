@@ -159,6 +159,20 @@ const toggleFollowByUsername = async (req, res) => {
     }
 };
 
+const getRandomUsers = async(req, res) => {
+    try {
+        // const totalUsers = await User.countDocuments();
+        const randomUsers = await User.aggregate([
+          { $sample: { size: 3 } },  { $unset: "password" }
+        ])//.select('_id username fullName profilePicture followers');
+    
+        res.status(200).json(randomUsers);
+     } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
+     }
+}
+
 export {
     getUserProfile,
     getFollowersListByUsername,
@@ -166,4 +180,5 @@ export {
     getSearchResults,
     updateUserById,
     toggleFollowByUsername,
+    getRandomUsers
 };

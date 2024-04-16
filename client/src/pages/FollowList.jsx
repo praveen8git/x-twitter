@@ -1,5 +1,5 @@
-import { RightSidebar, Sidebar, Tweet } from "../components";
-import { ArrowLeft, Search as MG } from "lucide-react";
+import { RightSidebar, Sidebar,} from "../components";
+import { ArrowLeft, BadgeCheck, } from "lucide-react";
 import { Link, NavLink, useParams, useNavigate } from "react-router-dom";
 import toast, { Toaster } from 'react-hot-toast';
 import axios from "axios";
@@ -114,7 +114,7 @@ const FollowList = (props) => {
                                             : user.profilePicture
                                     } alt="DP" />
                                     <div className="flex flex-col self-center">
-                                        <h3 className="font-medium">{user.fullName}</h3>
+                                        <h3 className="font-medium">{user.fullName} <BadgeCheck className={`inline-block ml-1 self-center text-black ${user.subscription == "Premium" ? 'bg-primary' : 'bg-yellow-500'} rounded-full`} size={16} /></h3>
                                         <p className="text-stone-500">@{user.username}</p>
                                     </div>
                                 </div>
@@ -138,7 +138,7 @@ const FollowList = (props) => {
 
             </div>
 
-            {/* <RightSidebar /> */}
+            <RightSidebar />
         </main>
     )
 }

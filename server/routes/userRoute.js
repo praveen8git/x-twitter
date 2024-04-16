@@ -1,7 +1,7 @@
 import express from 'express';
 import auth from '../middlewares/auth.js';
 import { deleteTweetById, getAllTweets, getTweetById, likeTweet, postRetweet, postTweet } from '../controllers/tweetController.js';
-import { getUserProfile, getFollowersListByUsername, getFollowingListByUsername, updateUserById, toggleFollowByUsername, getSearchResults } from '../controllers/userController.js';
+import { getUserProfile, getFollowersListByUsername, getFollowingListByUsername, updateUserById, toggleFollowByUsername, getSearchResults, getRandomUsers } from '../controllers/userController.js';
 import { postComment, deleteComment } from '../controllers/commentController.js';
 
 const userRouter = express.Router();
@@ -21,6 +21,7 @@ userRouter.get('/followers/:username', auth, getFollowersListByUsername);
 userRouter.get('/following/:username', auth, getFollowingListByUsername);
 
 userRouter.get('/search/:query', auth, getSearchResults);
+userRouter.get('/random-users', auth, getRandomUsers);
 
 
 userRouter.post('/comment', auth, postComment);

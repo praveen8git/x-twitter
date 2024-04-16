@@ -1,6 +1,6 @@
 import axios from "axios";
 import { RightSidebar, Sidebar, Tweet } from "../components";
-import { ArrowLeft, Search as MG } from "lucide-react";
+import { ArrowLeft, BadgeCheck, Search as MG } from "lucide-react";
 import { Link, NavLink, useParams, useNavigate } from "react-router-dom";
 import toast from 'react-hot-toast';
 import { useContext, useEffect, useState } from "react";
@@ -94,12 +94,12 @@ const Search = () => {
                                             : user.profilePicture
                                     } alt="DP" />
                                     <div className="flex flex-col self-center">
-                                        <h3 className="font-medium">{user.fullName}</h3>
+                                        <h3 className="font-medium">{user.fullName} <BadgeCheck className={`inline-block ml-1 self-center text-black ${user.subscription == "Premium" ? 'bg-primary' : 'bg-yellow-500'} rounded-full`} size={16} /></h3>
                                         <p className="text-stone-500">@{user.username}</p>
                                     </div>
                                 </div>
                                 <div className="self-center">
-                                    {console.log(user.followers)}
+                                    
                                     <button onClick={() => {toggleFollow(user.username)}} className="font-semibold border border-stone-700 px-6 py-1.5 pt-2 rounded-full text-sm bg-stone-200 text-black">
                                         {   
                                             user.followers && loggedUser && user.followers.includes(loggedUser._id) ? 'Following' : 'Follow'
@@ -120,7 +120,7 @@ const Search = () => {
 
             </div>
 
-            {/* <RightSidebar /> */}
+            <RightSidebar />
         </main>
     )
 }
