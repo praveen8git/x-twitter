@@ -39,7 +39,7 @@ const Sidebar = () => {
     });
   };
 
-  return (
+ if (user) return (
     <section className='flex flex-col h-full'>
       <Link to="/" className="logo invert my-4 mx-2 self-center lg:self-start lg:mx-16">
 

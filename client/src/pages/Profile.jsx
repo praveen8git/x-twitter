@@ -130,10 +130,10 @@ const Profile = () => {
                         <CalendarDays size={18} /> <span className="mt-[-3px]">Joined {new Date(userProfile.createdAt).toDateString()} </span>
                     </div>
                     <div className="flex gap-4 text-sm md:text-base">
-                        <Link>
+                        <Link to='following'>
                         {userProfile.following.length} <span className="text-stone-500">Following</span>
                         </Link>
-                        <Link>
+                        <Link to='followers'>
                         {followersCount} <span className="text-stone-500">Followers</span>
                         </Link>
                     </div>

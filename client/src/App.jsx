@@ -2,7 +2,7 @@ import axios from "axios";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import toast, { Toaster } from 'react-hot-toast';
 import { useContext, useEffect, useState } from "react";
-import { EditProfile, Home, Login, Profile, Register, Search, SingleTweet } from "./pages";
+import { EditProfile, FollowList, Home, Login, Profile, Register, Search, SingleTweet } from "./pages";
 import IsAuthenticatedContext from "./contexts/IsAuthenticatedContext";
 import ModalContextProvider from "./contexts/ModalContextProvider";
 
@@ -39,6 +39,8 @@ function App() {
         <Route path="/explore" element={<Search />} />
         <Route path="/profile/:username" element={<Profile />} />
         <Route path="/profile/:username/edit" element={<EditProfile />} />
+        <Route path="/profile/:username/following" element={<FollowList list={'Following'} />} />
+        <Route path="/profile/:username/followers" element={<FollowList list={'Followers'} />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/tweet/:tweetId" element={<SingleTweet/>} />

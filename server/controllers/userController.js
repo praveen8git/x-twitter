@@ -45,14 +45,14 @@ const getUserProfile = async (req, res) => {
         res.status(500).json({ message: err.message });
     }
 };
+
 // Fetches the list of followers for a user by username.
 const getFollowersListByUsername = async (req, res) => {
     try {
-        const user = await User.findOne({ username: req.params.username });
-        if (!user) return res.status(404).json({ message: 'User not found' });
-        const followers = await User.find({ _id: { $in: user.followers } }).select('-password');
+        const followers = await User.find({ username: req.params.username }).select('followers').populate('followers');
         res.json(followers);
     } catch (err) {
+        console.log(err);
         res.status(500).json({ message: err.message });
     }
 };
@@ -60,14 +60,35 @@ const getFollowersListByUsername = async (req, res) => {
 // Fetches the list of users the specified user is following by username.
 const getFollowingListByUsername = async (req, res) => {
     try {
-        const user = await User.findOne({ username: req.params.username });
-        if (!user) return res.status(404).json({ message: 'User not found' });
-        const following = await User.find({ _id: { $in: user.following } }).select('-password');
+        const following = await User.find({ username: req.params.username }).select('following').populate('following');
         res.json(following);
     } catch (err) {
+        console.log(err);
         res.status(500).json({ message: err.message });
     }
 };
+
+//get search results
+const getSearchResults = async(req,res)=>{
+    try{
+        const {query}  = req.params;
+        if(!query){
+         return res.status(400).json({ message: "No query found" });
+        }
+            const users = await User.find({
+                // fullName: { $regex: new RegExp(query, "i") }
+                $or: [
+                    { username: { $regex: new RegExp(query, "i") } },
+                    { fullName: { $regex: new RegExp(query, "i") } },
+                ]
+            }).select('_id username fullName profilePicture followers');
+          return  res.status(200).json( users );
+    }catch(error){
+      console.log(error)
+     return res.status(500).json({ message: "Internal server error" });
+    }
+    
+    }
 
 // Updates the user's profile information, excluding the password.
 const updateUserById = async (req, res) => {
@@ -142,6 +163,7 @@ export {
     getUserProfile,
     getFollowersListByUsername,
     getFollowingListByUsername,
+    getSearchResults,
     updateUserById,
-    toggleFollowByUsername
+    toggleFollowByUsername,
 };
