@@ -21,8 +21,9 @@ const Profile = () => {
             const response = await axios.get(`${VITE_SERVER}/api/profile/${username}`, {
                 withCredentials: true,
             });
-            // console.log(response.data);
+            console.log('userProfile',response.data);
             setUserProfile(response.data);
+            setFollowersCount(response.data.followers.length)
             setActiveTab('tweets')
             setTweetsData(response.data.tweets);
             setLoading(false);
@@ -51,9 +52,26 @@ const Profile = () => {
         setTweetsData(tweetsData.filter(tweet => tweet._id !== tweetId));
     };
 
-    useEffect(() => {
-        console.log(tweetsData);
-    }, [tweetsData])
+    const [followersCount, setFollowersCount] = useState(userProfile?.followers.length)
+    const toggleFollow = async () => {
+        try {
+            const response = await axios.patch(`${VITE_SERVER}/api/follow/${userProfile.username}`, {}, {
+                withCredentials: true,
+            });
+            // Update the userProfile state to reflect the new follow status
+            console.log(response.data, 'toggle follow');
+            setUserProfile({ ...userProfile, isFollowing: !userProfile.isFollowing });
+            setFollowersCount(response.data.followers.length)
+            toast.success(userProfile.isFollowing ? "Unfollowed" : "Followed");
+        } catch (error) {
+            console.error("Failed to toggle follow:", error);
+            toast.error("Failed to toggle follow");
+        }
+    };   
+
+    // useEffect(() => {
+    //     console.log(tweetsData);
+    // }, [tweetsData])
 
     if (loading) {
         return <div className="w-screen h-screen text-center py-[20%] bg-black animate-pulse">Loading...</div>;
@@ -91,8 +109,8 @@ const Profile = () => {
                                     Edit Profile
                                 </Link>
                             ) : (
-                                <button className="border border-stone-700 px-4 pb-1 pt-1 md:py-2 rounded-full hover:border-stone-500 transition-all">
-                                    {userProfile.isFollowing ? "Following" : "Follow"}
+                                <button className="border border-stone-700 px-4 pb-1 pt-1 md:py-2 rounded-full hover:border-stone-500 transition-all" onClick={toggleFollow}>
+                                    {userProfile.isFollowing ? "Unfollow" : "Follow"}
                                 </button>
                             )
                         }
@@ -113,10 +131,10 @@ const Profile = () => {
                     </div>
                     <div className="flex gap-4 text-sm md:text-base">
                         <Link>
-                            {userProfile.followers.length} <span className="text-stone-500">Following</span>
+                        {userProfile.following.length} <span className="text-stone-500">Following</span>
                         </Link>
                         <Link>
-                            {userProfile.following.length} <span className="text-stone-500">Followers</span>
+                        {followersCount} <span className="text-stone-500">Followers</span>
                         </Link>
                     </div>
                 </div>

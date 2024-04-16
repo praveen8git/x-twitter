@@ -38,7 +38,7 @@ const getUserProfile = async (req, res) => {
             res.json(user);
         } else {
             // This is another user's profile
-            const isFollowing = user.following.includes(req.user._id);
+            const isFollowing = user.followers.includes(req.user._id);
             res.json({ ...user.toObject(), isFollowing });
         }
     } catch (err) {
