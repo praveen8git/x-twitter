@@ -18,6 +18,7 @@ const register = async (req, res) => {
 
         if(password !== passwordConfirm) {
             res.status(400).json({ message: "Password & Confirm Password must be same!" })
+            return
         }
 
         const userExist = await User.findOne({ username: username });

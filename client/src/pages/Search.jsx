@@ -55,7 +55,7 @@ const Search = () => {
             <div className="flex flex-col w-full max-w-2xl border-[1px] border-x-stone-800 border-y-black">
                 {/* Searchbar section */}
                 <form onSubmit={handleSearch} className="flex gap-x-5 py-5 px-3 border-[1px] border-x-black border-t-black border-b-stone-800">
-                    <div className="flex flex-col justify-center">
+                    <div className="flex flex-col justify-center cursor-pointer">
                         <ArrowLeft onClick={() => navigate(-1, { replace: true })} />
                     </div>
                     <label htmlFor="search" className="relative has-[:focus]:w-full hover:w-full focus:w-full w-32 transition-width duration-300 ">

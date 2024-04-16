@@ -20,9 +20,61 @@ const Register = () => {
     setFormData({ ...formData, [name]: value });
   };
 
+
+  // form validation
+  const [errors, setErrors] = useState({});
+  const validateForm = () => {
+    let tempErrors = {};
+
+    // Check fullName
+    if (!formData.fullName || formData.fullName.trim() === "") {
+      tempErrors.fullName = "Full name is required.";
+    }
+
+    // Check username
+    if (!formData.username || formData.username.trim() === "") {
+      tempErrors.username = "Username is required.";
+    } else if (!/^[a-zA-Z0-9]+$/.test(formData.username)) {
+      tempErrors.username = "Username must not contain whitespace or special characters.";
+    }
+
+    // Check email
+    if (!formData.email || formData.email.trim() === "") {
+      tempErrors.email = "Email is required.";
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      tempErrors.email = "Email is not valid.";
+    }
+
+    // Check password
+    if (!formData.password || formData.password.trim() === "") {
+      tempErrors.password = "Password is required.";
+    } else if (formData.password.length < 8) {
+      tempErrors.password = "Password must be at least 8 characters.";
+    }
+
+    // Check password confirmation
+    if (formData.password !== formData.passwordConfirm) {
+      tempErrors.passwordConfirm = "Passwords do not match.";
+    }
+
+    // setErrors(tempErrors);
+
+    // Return true if there are no errors
+    // return Object.keys(tempErrors).length === 0;
+    return tempErrors;
+  };
+
   const handleRegister = async (e) => {
     e.preventDefault();
     // setLoading(true);
+    if (!validateForm()) {
+      // Validation failed, do not proceed with form submission
+      // Display toast notifications for each error
+      Object.entries(errors).forEach(([key, value]) => {
+        toast.error(value);
+      });
+      return;
+    }
 
     let fetch = axios.post(VITE_SERVER + "/auth/register", formData, {
       withCredentials: true,
@@ -43,8 +95,9 @@ const Register = () => {
           })
           navigate("/")
           return "Registered"
-        }},
-        error: (err) => `Error: ${err.response ? err.response.data.message.toString() : err.toString()}`,
+        }
+      },
+      error: (err) => `Error: ${err.response ? err.response.data.message.toString() : err.toString()}`,
     });
   };
 
@@ -88,6 +141,7 @@ const Register = () => {
                 placeholder='Enter your email'
                 onChange={(e) => onChangeHandler(e)}
                 required />
+
             </div>
 
             <div className="flex flex-col md:flex-row md:gap-4">
