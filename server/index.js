@@ -12,7 +12,7 @@ const app = express();
 
 
 const corsOptions = {
-    origin: 'http://localhost:5173',
+    origin: ['http://localhost:5173', 'https://x-twitter-lilac.vercel.app', 'https://xtwitter.praveensingh.in'],
     credentials: true
   }
 
