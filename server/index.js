@@ -26,7 +26,14 @@ app.use('/auth', authRouter);
 app.use('/api/', userRouter);
 
 
-app.listen(PORT, () => {
-    connectDB();
-    console.log(`server listening at port ${PORT}`)
+// app.listen(PORT, () => {
+//     connectDB();
+//     console.log(`server listening at port ${PORT}`)
+// })
+
+//Connect to the database before listening // for serverless deployment (cyclic.sh)
+connectDB().then(() => {
+  app.listen(PORT, () => {
+      console.log(`listening for requests at port ${PORT}`);
+  })
 })
