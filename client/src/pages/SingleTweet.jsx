@@ -127,6 +127,7 @@ const SingleTweet = () => {
                             placeholder="Post your comment"
                             onChange={(e) => { setCommentText(e.target.value) }}
                             value={commentText}
+                            autoFocus
                             name="text"
                             id="text" />
 

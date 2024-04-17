@@ -194,7 +194,7 @@ const Tweet = (props) => {
                 {/* actions */}
                 <div className="flex justify-between mt-3 text-sm text-gray-500">
 
-                    <div className="flex items-center justify-center  hover:text-primary hover:cursor-pointer">
+                    <div onClick={() => {navigate(`/tweet/${props._id}/#text`)}} className="flex items-center justify-center  hover:text-primary hover:cursor-pointer">
                         <MessageSquare className=" hover:bg-primary/5 hover:rounded-full p-2" size={36} /> {props.comments.length}
                     </div>
 
