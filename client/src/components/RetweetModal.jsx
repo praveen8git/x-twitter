@@ -107,6 +107,7 @@ const RetweetModal = (props) => {
                         onChange={(e) => { setRetweetText(e.target.value) }}
                         value={retweetText}
                         autoFocus
+                        required
                         name="text"
                         id="text" />
 

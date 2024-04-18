@@ -37,7 +37,8 @@ const RightSidebar = () => {
       // Update the userProfile state to reflect the new follow status
       console.log(response.data, 'toggle follow');
       setUsers(prev => prev.filter(user => user.username !== username));
-      toast.success("Unfollowed");
+      response.data.followers.includes(loggedUser._id) ? toast.success("Followed") : toast.success("Unfollowed")
+      // toast.success("Unfollowed");
     } catch (error) {
       console.error("Failed to toggle follow:", error);
       toast.error("Failed to toggle follow");

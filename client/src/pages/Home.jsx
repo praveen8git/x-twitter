@@ -96,6 +96,7 @@ const Home = () => {
               placeholder="What is happening ?!"
               onChange={(e) => { setPostText(e.target.value) }}
               value={postText}
+              required
               name="text"
               id="text" />
 
